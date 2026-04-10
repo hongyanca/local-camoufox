@@ -1,6 +1,3 @@
-~~~markdown
-# PLAN.md
-
 # Implementation Plan: Python REST API Server for URL-to-Markdown Conversion
 
 ## 1. Goal
@@ -606,7 +603,7 @@ GET /health
 ## 8. Example Request Flow
 
 1. Client sends `POST /v1/convert`
-2. Server validates `X-API-Key`
+2. Server validates the key in `Authorization: Bearer API_KEY`
 3. Server validates URL
 4. Camoufox loads webpage and returns HTML
 5. MarkItDown converts HTML to Markdown
@@ -619,7 +616,7 @@ GET /health
 ```bash
 curl -X POST "http://localhost:8000/v1/convert" \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: replace-with-strong-secret" \
+  -H "Authorization: Bearer API_KEY" \
   -d '{
     "url": "https://example.com"
   }'
@@ -683,7 +680,7 @@ The implementation is complete when:
 
 - FastAPI server runs locally
 - `POST /v1/convert` accepts a URL and returns Markdown
-- Endpoint requires valid `X-API-Key`
+- Endpoint requires valid `API_KEY`
 - HTML is fetched via Camoufox
 - HTML is converted via MarkItDown
 - Errors are handled consistently
