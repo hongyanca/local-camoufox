@@ -5,9 +5,9 @@ from fastapi.exceptions import RequestValidationError
 from starlette.requests import Request
 
 from app.main import app
-from app.models import ConvertRequest, ConvertResponse
-from app.routers.convert import convert_url
-from app.services.conversion_service import ConversionResult
+from app.models import ConvertRequest, ConvertResponse, RawResponse
+from app.routers.convert import convert_url, raw_url
+from app.services.conversion_service import ConversionResult, RawResult
 from app.utils.exceptions import (
     ApplicationError,
     ConversionError,
@@ -21,11 +21,16 @@ class FakeService:
         self,
         *,
         result: ConversionResult | None = None,
+        raw_result: RawResult | None = None,
         error: Exception | None = None,
     ) -> None:
         self.result = result or ConversionResult(
             url="https://example.com/article",
             markdown="# Example",
+        )
+        self.raw_result = raw_result or RawResult(
+            url="https://example.com/article",
+            html="<html><body>Hello</body></html>",
         )
         self.error = error
         self.urls: list[str] = []
@@ -35,6 +40,12 @@ class FakeService:
         if self.error is not None:
             raise self.error
         return self.result
+
+    async def fetch_raw_html(self, url: str) -> RawResult:
+        self.urls.append(url)
+        if self.error is not None:
+            raise self.error
+        return self.raw_result
 
 
 def build_request(path: str = "/v1/convert") -> Request:
@@ -106,3 +117,16 @@ def test_validation_error_handler_returns_422() -> None:
 
     assert response.status_code == 422
     assert decode_body(response) == {"detail": "Request body validation failed"}
+
+
+def test_raw_route_success() -> None:
+    service = FakeService()
+    payload = ConvertRequest(url="https://example.com/article")
+
+    response = asyncio.run(raw_url(payload=payload, _auth=None, service=service))
+
+    assert response == RawResponse(
+        url="https://example.com/article",
+        html="<html><body>Hello</body></html>",
+    )
+    assert service.urls == ["https://example.com/article"]

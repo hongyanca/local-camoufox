@@ -1,6 +1,6 @@
 # local-camoufox
 
-`local-camoufox` is a FastAPI service that accepts a URL, fetches the rendered page with Camoufox, converts the HTML to Markdown with MarkItDown, and returns the Markdown behind an API key.
+`local-camoufox` is a FastAPI service that accepts a URL, fetches the rendered page with Camoufox, and returns either converted Markdown or cleaned raw HTML behind an API key.
 
 By default the service runs Camoufox with `headless="virtual"`, which uses a virtual display instead of standard headless mode.
 
@@ -76,6 +76,42 @@ Example:
 
 ```bash
 curl -X POST "http://localhost:8000/v1/convert" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer replace-with-strong-secret" \
+  -d '{
+    "url": "https://example.com"
+  }'
+```
+
+### `POST /v1/raw`
+
+Fetches the rendered page HTML and returns it with all `<style>`, `<script>`, `<link>`, `<noscript>`, `<meta>` tags, inline `style` attributes, and `<!DOCTYPE>` declarations removed.
+
+Headers:
+
+- `Authorization: Bearer <api_key>`
+
+Request:
+
+```json
+{
+  "url": "https://example.com/article"
+}
+```
+
+Response:
+
+```json
+{
+  "url": "https://example.com/article",
+  "html": "<html><head>\n</head><body><div>\n<h1>Example Article</h1>\n<p>Content here...</p>\n</div></body></html>"
+}
+```
+
+Example:
+
+```bash
+curl -X POST "http://localhost:8000/v1/raw" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer replace-with-strong-secret" \
   -d '{

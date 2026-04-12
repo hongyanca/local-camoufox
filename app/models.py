@@ -4,9 +4,7 @@ from pydantic import AnyHttpUrl, BaseModel, ConfigDict
 class ConvertRequest(BaseModel):
     url: AnyHttpUrl
 
-    model_config = ConfigDict(
-        json_schema_extra={"example": {"url": "https://example.com/article"}}
-    )
+    model_config = ConfigDict(json_schema_extra={"example": {"url": "https://example.com/article"}})
 
 
 class ConvertResponse(BaseModel):
@@ -16,6 +14,11 @@ class ConvertResponse(BaseModel):
 
 class ErrorResponse(BaseModel):
     detail: str
+
+
+class RawResponse(BaseModel):
+    url: str
+    html: str
 
 
 class HealthResponse(BaseModel):
