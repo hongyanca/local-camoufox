@@ -6,9 +6,9 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "camoufox>=0.4.11",
-    "fastapi[standard]>=0.135.3",
+    "fastapi[standard]>=0.136.0",
     "markitdown",
-    "pydantic-settings>=2.13.1",
+    "pydantic-settings>=2.14.0",
     "python-dotenv>=1.2.2",
 ]
 
