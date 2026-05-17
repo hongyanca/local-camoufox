@@ -16,7 +16,9 @@ COPY app ./app
 COPY main.py ./
 COPY .env.example ./
 
-RUN python -m camoufox fetch
+RUN python -m camoufox sync && \
+    python -m camoufox set official/prerelease && \
+    python -m camoufox fetch
 
 FROM python:3.13-slim AS runtime
 

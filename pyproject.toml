@@ -5,10 +5,10 @@ description = "FastAPI service that fetches webpages with Camoufox and converts 
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "camoufox>=0.4.11",
-    "fastapi[standard]>=0.136.0",
+    "cloverlabs-camoufox>=0.6.0",
+    "fastapi[standard]>=0.136.1",
     "markitdown",
-    "pydantic-settings>=2.14.0",
+    "pydantic-settings>=2.14.1",
     "python-dotenv>=1.2.2",
 ]
 
